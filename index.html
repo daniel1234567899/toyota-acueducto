@@ -135,15 +135,16 @@
   </div>
  
  
- 
- <div id="formulario"></div>
+
+    <div id="formulario"></div>
+
 
   <script>
   fetch('https://twilight-cherry-3ad5.daniel169210.workers.dev/')
     .then(r => r.text())
-    .then(html => document.getElementById('formulario').innerHTML = html);
+    .then(html => document.getElementById('formulario').innerHTML = html)
+    .catch(e => console.error(e));
   </script>
-  </section>
   
     
 <section class="container cars-01 container-fluid">
