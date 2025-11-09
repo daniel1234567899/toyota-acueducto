@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Prospecto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px #ccc;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Formulario de Prospecto</h2>
+
+    <form id="prospectoForm">
+        <input type="text" name="nombre" placeholder="Nombre" required>
+        <input type="text" name="apellido" placeholder="Apellido" required>
+        <input type="email" name="email" placeholder="Correo Electrónico" required>
+        <input type="tel" name="telefono" placeholder="Teléfono" required>
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        document.getElementById("prospectoForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let formData = {
+                DatosGenerales: {
+                    Nombre: document.querySelector('input[name="nombre"]').value,
+                    ApellidoPaterno: document.querySelector('input[name="apellido"]').value
+                },
+                Electronicos: [
+                    {
+                        Tipo: "Personal",
+                        Medio: document.querySelector('input[name="email"]').value
+                    }
+                ],
+                Telefonos: [
+                    {
+                        Tipo: "Móvil",
+                        Telefono: document.querySelector('input[name="telefono"]').value
+                    }
+                ]
+            };
+
+            enviarProspecto(formData);
+        });
+
+       function enviarProspecto(data) {
+        let xmlData = `
+            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://qac04.crmpro.com.mx/webservices/">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <web:SetProspectoAltaCRMMkt>
+                        <web:idOrganizacion>136</web:idOrganizacion>
+                        <web:idEmpresa>348</web:idEmpresa>
+                        <web:idFuerzaVentas>0</web:idFuerzaVentas>
+                        <web:idGrupoVenta>0</web:idGrupoVenta>
+                        <web:idUsuarioAsig>0</web:idUsuarioAsig>
+                        <web:idGiroAsig>3</web:idGiroAsig>
+                        <web:idInterfaz>892</web:idInterfaz>
+                        <web:Validacion>CB0370D4-9C9D-4882-BE34-02AF941B0406</web:Validacion>
+                        <web:JSON_Prospecto><![CDATA[${JSON.stringify(data).replace(/]]>/g, "]]]]><![CDATA[>") }]]></web:JSON_Prospecto>
+                        <web:idForm>Landing_TCOU_Form001</web:idForm>
+                        <web:Formulario>Cotiza tu Vehículo</web:Formulario>
+                        <web:idCampania>VAU000121222</web:idCampania>
+                        <web:Campania>Venta_Nuevos_Abril2025</web:Campania>
+                    </web:SetProspectoAltaCRMMkt>
+                </soapenv:Body>
+            </soapenv:Envelope>`;
+    
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "https://qac04.crmpro.com.mx/webservices/InterfacesProspeccion.asmx", true);
+        xhr.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
+        xhr.setRequestHeader("SOAPAction", "https://qac04.crmpro.com.mx/webservices/InterfacesProspeccion.asmx/SetProspectoAltaCRMMkt");
+    
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log("Respuesta del servidor:", xhr.responseText);
+                alert("Prospecto enviado correctamente.");
+            } else if (xhr.readyState === 4) {
+                alert("Error al enviar el prospecto: " + xhr.status);
+            }
+        };
+    
+        console.log("Enviando XML:", xmlData);
+        xhr.send(xmlData);
+    }
+
+    </script>
+
+</body>
+</html>

@@ -5,7 +5,7 @@
     return parsedUrl.searchParams.get(key) ?? '';
   }
 
-  let form = document.querySelectorAll('form');
+  /*let form = document.querySelectorAll('form');
 
   for (var i = 0; i < form.length; i++) {
 
@@ -71,7 +71,7 @@
 
     })
   }
-
+*/
   function switchUrlWhats(element) {
     let option = element.options[element.selectedIndex];
     let redirectTo = option.getAttribute('data-redirect-to')
@@ -191,7 +191,7 @@
     },
   });
 
-  function request(method, url, data = null, callback) {
+  /*function request(method, url, data = null, callback) {
     let xhr = new XMLHttpRequest();
     let sourceOrigin = `${window.location.protocol}//${window.location.host}`;
     let params = null;
@@ -328,7 +328,7 @@
         targetWhatsappContactUs[iwhatsContactUs].innerHTML = whatsappContactUs;
       }
     }
-  });
+  });*/
 
   const lightbox = new GLightbox('.glightbox', {
     touchNavigation: true,
